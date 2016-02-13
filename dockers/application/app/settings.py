@@ -1,7 +1,7 @@
 
 
 DB = {}
-for shard_number in xrange(1, 5):
+for shard_number in xrange(1, 3):
     DB[shard_number] = {
         'name': 'docker_db',
         'password': 'docker',
@@ -10,7 +10,7 @@ for shard_number in xrange(1, 5):
     }
 
 AMQP = {}
-for shard_number in xrange(1, 4):
+for shard_number in xrange(1, 3):
     AMQP[shard_number] = {
         'virtual_host': '/docker',
         'password': 'docker',
