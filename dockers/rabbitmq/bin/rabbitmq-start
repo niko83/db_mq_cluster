@@ -1,0 +1,11 @@
+#!/bin/bash
+
+/usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management
+service rabbitmq-server start
+
+rabbitmqctl add_user docker docker
+rabbitmqctl add_vhost /docker
+rabbitmqctl set_permissions -p /docker docker ".*" ".*" ".*"
+rabbitmqctl set_user_tags docker administrator
+
+tail -f /var/log/rabbitmq/*
