@@ -49,5 +49,5 @@ def make_server(host, port, app, thread_count=None, handler_class=WSGIRequestHan
 
 
 print 'Starting...'
-httpd = make_server('', 8004, application)
+httpd = make_server('', 80, application)
 httpd.serve_forever()
