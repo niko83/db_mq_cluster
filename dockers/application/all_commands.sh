@@ -1,2 +1,2 @@
-/bin/bash -c "/venv/bin/python /app/service.py &" &&
+/bin/bash -c "/venv/bin/python /data/app/service.py &" &&
 /usr/sbin/sshd

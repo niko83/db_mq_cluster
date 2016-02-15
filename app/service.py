@@ -12,7 +12,8 @@ import amqp
 
 def application(environ, start_response):
     try:
-        output = 'asdasd'
+        import socket
+        output = socket.gethostname()
         amqp.get_connection()
     except Exception as e:
         traceback.print_exc()
