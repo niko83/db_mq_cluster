@@ -8,6 +8,9 @@ start:
 	sudo docker run -ti -d --hostname=db2 --name=db2 psql;
 	sudo docker run -ti -d --hostname=mq1 --name=mq1 mq;
 	sudo docker run -ti -d --hostname=mq2 --name=mq2 mq;
+	sudo ~/update-docker-dns.sh;
+	cp /docker-container-hosts ../app/docker-container-hosts
+	sleep 6;
 	sudo docker run -ti -d --hostname=app1 --name=app1 -v /home/niko/projects/db_mq_cluster/app/:/data/app app
 	sudo docker run -ti -d --hostname=app2 --name=app2 -v /home/niko/projects/db_mq_cluster/app/:/data/app app
 	sudo docker run -ti -d --hostname=app3 --name=app3 -v /home/niko/projects/db_mq_cluster/app/:/data/app app

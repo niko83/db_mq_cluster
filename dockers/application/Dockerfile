@@ -3,7 +3,7 @@ MAINTAINER niko
 
 RUN yum update -y && yum install -y vim-enhanced sudo && yum clean all
 
-RUN yum install -y python-virtualenv && yum clean all
+RUN yum install -y python-virtualenv gcc python-devel postgresql-devel && yum clean all
 
 EXPOSE 22
 EXPOSE 80
@@ -37,4 +37,4 @@ RUN echo "cd /data/app" >> /home/app_user/.bashrc
 ADD all_commands.sh /all_commands.sh
 RUN chown app_user:app_user -R /all_commands.sh && chmod +x /all_commands.sh
 
-CMD /bin/bash -c "/all_commands.sh &" && /usr/sbin/sshd && /bin/bash
+CMD /all_commands.sh && /bin/bash

@@ -8,17 +8,24 @@ import traceback
 import shutil
 import os
 import amqp
+import time
+from app import app
+import db
 
+amqp.get_connection()
+db.get_connections()
 
 def application(environ, start_response):
+
+    start_time = time.time()
+    output = {}
     try:
-        import socket
-        output = socket.gethostname()
-        amqp.get_connection()
+        output = app()
     except Exception as e:
         traceback.print_exc()
 
     start_response("200 OK", [('Content-Type', 'application/json')])
+    output['time'] = '%.3f ms' % ((time.time() - start_time) * 1000)
     return [json.dumps(output)]
 
 

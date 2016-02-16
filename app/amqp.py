@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 import pika
 import settings
+import sys
 
 _connections = {}
 _is_channel_initialized = False
