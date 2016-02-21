@@ -1,7 +1,9 @@
 
+BLOOM_ERROR_RATE = 0.001
+SHARD_CAPACITY = 1000000
 
 DB = {}
-for shard_number in xrange(1, 3):
+for shard_number in range(1, 3):
     DB[shard_number] = {
         'database': 'docker',
         'password': 'docker',
@@ -11,7 +13,7 @@ for shard_number in xrange(1, 3):
     }
 
 AMQP = {}
-for shard_number in xrange(1, 3):
+for shard_number in range(1, 2):
     AMQP[shard_number] = {
         'virtual_host': '/docker',
         'password': 'docker',

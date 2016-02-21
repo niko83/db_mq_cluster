@@ -1,2 +1,10 @@
 pika==0.10.0
 psycopg2==2.6.1
+amqplib==1.0.2
+aiohttp==0.21.2
+ipdb==0.8.3
+pybloom-mirror==2.0.0
+#gunicorn==19.4.5
+aiopg==0.9.2
+aioamqp==0.6.0
+

@@ -12,6 +12,9 @@ import time
 from app import app
 import db
 
+import urlparse
+
+amqp.get_amqplib_connection()
 amqp.get_connection()
 db.get_connections()
 
@@ -19,14 +22,19 @@ def application(environ, start_response):
 
     start_time = time.time()
     output = {}
+
     try:
-        output = app()
+        output = app(
+            command_name=environ['PATH_INFO'].strip('/'),
+            data=urlparse.parse_qs(environ['QUERY_STRING'])
+        )
     except Exception as e:
+        output['error'] = str(e)
         traceback.print_exc()
 
     start_response("200 OK", [('Content-Type', 'application/json')])
     output['time'] = '%.3f ms' % ((time.time() - start_time) * 1000)
-    return [json.dumps(output)]
+    return [json.dumps(output, indent=2)]
 
 
 class ThreadPoolWSGIServer(WSGIServer):

@@ -3,7 +3,12 @@ MAINTAINER niko
 
 RUN yum update -y && yum install -y vim-enhanced sudo && yum clean all
 
-RUN yum install -y python-virtualenv gcc python-devel postgresql-devel && yum clean all
+RUN yum install -y gcc postgresql-devel openssl-devel wget make && yum clean all
+
+RUN wget "https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tar.xz" && \
+tar xf Python-3.5.1.tar.xz && cd Python-3.5.1 && ./configure && make install  && \
+pip3.5 install virtualenv pip -U
+
 
 EXPOSE 22
 EXPOSE 80
@@ -21,10 +26,10 @@ RUN ssh-keygen -A
 RUN echo 'root:rootroot' | chpasswd
 RUN echo 'app_user:app_user' | chpasswd
 
-RUN virtualenv /venv
+RUN virtualenv-3.5 --python=python3.5 /venv
 ADD packages /venv/packages
 
-RUN /venv/bin/pip install --upgrade pip && /venv/bin/pip install -r /venv/packages
+RUN /venv/bin/pip install -r /venv/packages
 
 RUN chown app_user:app_user -R /venv
 
