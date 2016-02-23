@@ -3,6 +3,8 @@ import settings
 import db
 import sys
 import os
+import time
+from threading import Thread
 
 _filters = {
     'uuid_in_db': {}
@@ -23,9 +25,13 @@ def add_uuid_to_db(uuid, db_key):
     _filters['uuid_in_db'][db_key].add(uuid)
 
 
+
 def restore_bloom_keys():
-    sql = "SELECT uuid, id from users WHERE id > %s order by id ASC LIMIT 1000"
+    start_time = time.time()
+    sql = "SELECT uuid, id from users WHERE id > %s order by id ASC LIMIT 5000"
     sys.stdout.write('start restore bloom filter' + os.linesep)
+    counter = 0
+
     for db_key in settings.DB:
         max_row_id = 0
         while True:
@@ -34,12 +40,18 @@ def restore_bloom_keys():
                 all_rows_processed = False
                 max_row_id = row_id
                 add_uuid_to_db(uuid, db_key)
+                counter += 1
+                if counter % 20000 == 0:
+                    sys.stdout.write('.')
+                    sys.stdout.flush()
+
             if all_rows_processed:
                 break
 
-    sys.stdout.write(('finish restore bloom filter: max row_id = %s' + os.linesep) % max_row_id)
+    sys.stdout.write('Restored bloom filter. Count: %s, time: %.3f %s' % (
+        counter, time.time() - start_time, os.linesep,
+    ))
 
-restore_bloom_keys()
-
-
-
+worker = Thread(target=restore_bloom_keys)
+worker.daemon = True
+worker.start()

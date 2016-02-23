@@ -15,7 +15,8 @@ async def get_async_connections():
 
     for db_key, db_data in settings.DB.items():
         _async_connections[db_key] = await aiopg.create_pool(
-            dsn='dbname={database} user={username} password={password} host={host}'.format(**db_data)
+            dsn='dbname={database} user={username} password={password} host={host}'.format(**db_data),
+            minsize=4, maxsize=4,
         )
 
     return _async_connections

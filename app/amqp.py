@@ -12,7 +12,6 @@ _is_channel_initialized = False
 
 
 EXCHANGE = 'commonrail'
-QUEUE = 'events'
 ROUTING_KEY = 'event'
 
 
@@ -23,28 +22,26 @@ async def get_async_connections():
     for mq_key in settings.AMQP:
         mq_data = settings.AMQP[mq_key]
 
-        conn = await aioamqp.connect(
+        transport, protocol = await aioamqp.connect(
             host=mq_data['host'],
             login=mq_data['username'],
             password=mq_data['password'],
             virtualhost=mq_data['virtual_host'],
         )
-        _async_connections[mq_key] = conn
+
+        channel = await protocol.channel()
+        _async_connections[mq_key] = (transport, protocol, channel)
     return _async_connections
 
 async def broadcast(event_type, data):
 
     connections = await get_async_connections()
-    for transport, protocol in connections.values():
-        channel = await protocol.channel()
+    for transport, protocol, channel in connections.values():
         await channel.basic_publish(
             payload=pickle.dumps(data),
             exchange_name=EXCHANGE,
             routing_key=ROUTING_KEY
         )
-
-        #  await protocol.close()
-        #  transport.close()
 
 def get_connection():
 
@@ -81,15 +78,3 @@ def _init_channel(connection):
 
     channel = connection.channel()
     channel.exchange_declare(exchange=EXCHANGE, durable=False)
-    channel.queue_declare(
-        queue=QUEUE,
-        durable=True,
-        auto_delete=True,
-        arguments={'x-message-ttl': 30000},
-    )
-
-    channel.queue_bind(
-        exchange=EXCHANGE,
-        queue=QUEUE,
-        routing_key=ROUTING_KEY
-    )

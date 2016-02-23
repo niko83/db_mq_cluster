@@ -1,6 +1,7 @@
 
 BLOOM_ERROR_RATE = 0.001
 SHARD_CAPACITY = 1000000
+HOSTNAME = None
 
 DB = {}
 for shard_number in range(1, 3):

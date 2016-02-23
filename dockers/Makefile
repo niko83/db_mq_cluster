@@ -18,8 +18,6 @@ start:
 	sudo ~/update-docker-dns.sh;
 	cp /docker-container-hosts ../app/docker-container-hosts
 	sudo docker run -ti -d --hostname=lb -v /home/niko/projects/db_mq_cluster/app/:/data/app --name=lb lb;
-exec:
-	sudo docker run -ti --rm --hostname=app4 --name=app4 -v /home/niko/projects/db_mq_cluster/app/:/data/app app /bin/bash
 stop:
 	sudo docker rm -f db1 db2 mq1 mq2 app1 app2 app3 app4 lb;
 restart:

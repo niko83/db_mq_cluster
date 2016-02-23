@@ -10,9 +10,10 @@ RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC64107
     && apt-get install -y vim ca-certificates nginx=${NGINX_VERSION} gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-# forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
+## forward request and error logs to docker log collector
+RUN ln -sf /data/app/logs/nginx_lb_access.log /var/log/nginx/access.log \
+    && ln -sf /data/app/logs/nginx_lb_error.log /var/log/nginx/error.log
+ 
 ADD lb.conf /etc/nginx/conf.d/lb.conf
 
 RUN mkdir /data
